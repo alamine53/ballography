@@ -54,6 +54,8 @@ class Histogram3D:
         ax.set_ylim(400,-47.5)
         ax.set_zlim(0, self.zlim)
         ax.view_init(azim=self.azimuth, elev=self.elevation)
+        
+        return ax
 
 if __name__ == "__main__":
     
