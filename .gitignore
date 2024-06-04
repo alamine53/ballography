@@ -1,1 +1,5 @@
 venv/
+__*
+*csv
+*zip
+*ipynb

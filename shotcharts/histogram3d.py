@@ -16,7 +16,7 @@ class Histogram3D:
         self.unit = unit
         self.alpha = alpha  # Transparency of the squares
         
-    def plot(self, x, y, color='#e9e9e9', ax=None):
+    def plot(self, x, y, ax=None, color='#e9e9e9', **kwargs):
         
         # If an axes object isn't provided to plot onto, just get current one
         if ax is None:
@@ -39,16 +39,15 @@ class Histogram3D:
         dx = dy = self.multiplier * np.ones_like(xpos)
         dz = hist.ravel()
 
-        # # Filter out the bars where dz is 0
-        # nonzero = dz > 0
-        # xpos = xpos[nonzero]
-        # ypos = ypos[nonzero]
-        # dx = dx[nonzero]
-        # dy = dy[nonzero]
-        # dz = dz[nonzero]
+        # Filter out the bars where dz is 0
+        nonzero = dz > self.threshold
+        xpos = xpos[nonzero]
+        ypos = ypos[nonzero]
+        dx = dx[nonzero]
+        dy = dy[nonzero]
+        dz = dz[nonzero]
 
-        ax.bar3d(xpos, ypos, zpos, dx, dy, dz, zsort='average', alpha=self.alpha, color=color)
-        ax.axis('off')
+        ax.bar3d(xpos, ypos, zpos, dx, dy, dz, zsort='average', alpha=self.alpha, color=color, **kwargs)
         # ax.grid(True, which='both', linestyle='--', linewidth=0.5, color='gray', alpha=0.3)
         ax.set_xlim(-250,250)
         ax.set_ylim(400,-47.5)
@@ -61,10 +60,14 @@ if __name__ == "__main__":
     
     # Create some data
     x = np.random.normal(-200, 200, 1000)
-    y = np.random.normal(-22.5, 300, 1000)
+    y = np.random.normal(0, 300, 1000)
     
+    from halfcourt3d import draw_halfcourt
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='3d')
+    draw_halfcourt(ax=ax, unit='inch')
     # Create the 3D histogram
     hist3d = Histogram3D()
-    hist3d.plot(x, y)
+    hist3d.plot(x, y, ax=ax)
     plt.show()
     
