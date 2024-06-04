@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 
-def draw_halfcourt(ax=None, color='black', lw=1, outer_lines=False, unit='inch', facecolor='#F6E4CA', edgecolor='black', alpha=0.2):
+def draw_halfcourt(ax=None, color='black', lw=1, outer_lines=False, unit='inch', facecolor=None, edgecolor='black', alpha=0):
     ''''
     Draw a half basketball court in inches.
     '''
@@ -15,7 +15,7 @@ def draw_halfcourt(ax=None, color='black', lw=1, outer_lines=False, unit='inch',
     x_min, x_max = -250, 250 # sideline to sideline
     y_min, y_max = -47.5, 422.5 # baseline to halfcourt
     verts = [[(x_min,y_min,0), (x_min,y_max,0), (x_max,y_max,0), (x_max,y_min,0), (x_min,y_min,0)]]
-    oob = Poly3DCollection(verts, edgecolor=edgecolor, facecolor=facecolor, alpha=alpha)
+    oob = Poly3DCollection(verts, edgecolor=edgecolor, facecolor=facecolor, alpha=alpha, linewidth=lw)
     ax.add_collection3d(oob)
     # Create the various parts of an NBA basketball court
 
