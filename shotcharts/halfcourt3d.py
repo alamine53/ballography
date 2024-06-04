@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 
-def draw_halfcourt(ax=None, color='black', lw=1, outer_lines=False, unit='inch', facecolor=None, edgecolor='black', alpha=0):
+def draw_halfcourt(ax=None, color='black', lw=0.5, outer_lines=False, unit='inch', facecolor=None, edgecolor='black', alpha=0):
     ''''
     Draw a half basketball court in inches.
     '''
@@ -79,6 +79,17 @@ def draw_halfcourt(ax=None, color='black', lw=1, outer_lines=False, unit='inch',
     verts = [[(x_min,y_min,0), (x_min,y_max,0), (x_max,y_max,0), (x_max,y_min,0), (x_min,y_min,0)]]
     corner = Poly3DCollection(verts, edgecolor=edgecolor, linewidth=lw, alpha=0)
     ax.add_collection3d(corner)
+    
+    # restricted area
+    center = (0, 0)
+    radius = 40
+    theta_full = np.linspace(np.radians(-90), np.radians(90), 120)
+    y = center[1] + radius * np.cos(theta_full)  # Along the width of the court
+    x = center[0] + radius * np.sin(theta_full)
+    z = np.zeros_like(y)
+    verts = [list(zip(x, y, z))]
+    restricted_area = Line3DCollection(verts, colors=edgecolor, linewidth=lw)
+    ax.add_collection3d(restricted_area)
     
     # # Create the basketball hoop
     # # Diameter of a hoop is 18" so it has a radius of 9", which is a value
