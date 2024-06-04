@@ -39,13 +39,13 @@ class Histogram3D:
         dx = dy = self.multiplier * np.ones_like(xpos)
         dz = hist.ravel()
 
-        # Filter out the bars where dz is 0
-        nonzero = dz > 0
-        xpos = xpos[nonzero]
-        ypos = ypos[nonzero]
-        dx = dx[nonzero]
-        dy = dy[nonzero]
-        dz = dz[nonzero]
+        # # Filter out the bars where dz is 0
+        # nonzero = dz > 0
+        # xpos = xpos[nonzero]
+        # ypos = ypos[nonzero]
+        # dx = dx[nonzero]
+        # dy = dy[nonzero]
+        # dz = dz[nonzero]
 
         ax.bar3d(xpos, ypos, zpos, dx, dy, dz, zsort='average', alpha=self.alpha, color=color)
         ax.axis('off')
