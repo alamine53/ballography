@@ -1,1 +1,1 @@
-from histogram_3d import Histogram3D
+from shotcharts.histogram_3d import Histogram3D
