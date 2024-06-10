@@ -6,7 +6,7 @@ np.random.seed(19680801)
 
 class Histogram3D:
     
-    def __init__(self, bins=25, threshold=50, multiplier=10, zlim=4000, azimuth=42, elevation=25, unit='inch', alpha=0.50):
+    def __init__(self, bins=25, threshold=50, multiplier=10, zlim=4000, azimuth=42, elevation=25, unit='inch'):
         self.bins = bins # Number of squares in the x and y dimensions
         self.threshold = threshold # Squares with a volume below this threshold will be empty
         self.multiplier = multiplier # Multiplier for the size of the squares (if bins are changed, this should be adjusted)
@@ -14,9 +14,8 @@ class Histogram3D:
         self.azimuth = azimuth
         self.elevation = elevation
         self.unit = unit
-        self.alpha = alpha  # Transparency of the squares
         
-    def plot(self, x, y, ax=None, color='#e9e9e9', **kwargs):
+    def plot(self, x, y, ax=None, **kwargs):
         
         # If an axes object isn't provided to plot onto, just get current one
         if ax is None:
@@ -47,7 +46,7 @@ class Histogram3D:
         dy = dy[nonzero]
         dz = dz[nonzero]
 
-        ax.bar3d(xpos, ypos, zpos, dx, dy, dz, zsort='average', alpha=self.alpha, color=color, **kwargs)
+        ax.bar3d(xpos, ypos, zpos, dx, dy, dz, zsort='average', **kwargs)
         # ax.grid(True, which='both', linestyle='--', linewidth=0.5, color='gray', alpha=0.3)
         ax.set_xlim(-250,250)
         ax.set_ylim(400,-47.5)
