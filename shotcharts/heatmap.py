@@ -63,7 +63,7 @@ class Heatmap:
                 ax.set_xlabel('')
                 ax.set_ylabel('')
                 if outfile:
-                        plt.savefig(outfile, dpi=400, bbox_inches='tight')
+                        plt.savefig(outfile, dpi=220, bbox_inches='tight')
                 else:
                         plt.show()
                 
