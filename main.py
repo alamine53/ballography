@@ -28,27 +28,27 @@ def main():
     parser.add_argument("-c", "--csv_path", help="Path to the csv file", default="data/NBA_2024_Shots.csv")
     args = parser.parse_args()
 
-    games = Games(season=args.season)
-    print(games.get_latest())
+    # games = Games(season=args.season)
+    # print(games.get_latest())
     
-    # shots = Shots(season=args.season, from_db=False)
-    # print(shots.shots)
+    shots = Shots(season=args.season, from_db=False)
+    print(shots.shots)
     
-    # hm = Heatmap(headshot=True)
+    hm = Heatmap(headshot=True)
     
-    # print("Player name: ", args.player)
-    # print("Season: ", args.season)
-    # print("Output file: ", args.output)
-    # print("CSV path: ", args.csv_path)
+    print("Player name: ", args.player)
+    print("Season: ", args.season)
+    print("Output file: ", args.output)
+    print("CSV path: ", args.csv_path)
     
-    # dfp = shots.get_player_shots(args.player)
+    dfp = shots.get_player_shots(args.player)
 
-    # stats = get_shooting_stats(dfp)
-    # annos = tabulate.tabulate(stats, headers= ["Attempts per game", ""], tablefmt="simple", floatfmt=".1f")   
-    # print(annos)
-    # nba_id = dfp['PLAYER_ID'].values[0]
-    # x, y = 10*dfp['LOC_X'], 10*dfp['LOC_Y']-47.5 # convert feet to inches
-    # hm.plot(x, y, title=f"{args.player}\n2023-24 Reg. Season", footnote="nba.stats.com", nba_id=nba_id, annos=annos)
+    stats = get_shooting_stats(dfp)
+    annos = tabulate.tabulate(stats, headers= ["Attempts per game", ""], tablefmt="simple", floatfmt=".1f")   
+    print(annos)
+    nba_id = dfp['PLAYER_ID'].values[0]
+    x, y = 10*dfp['LOC_X'], 10*dfp['LOC_Y']-47.5 # convert feet to inches
+    hm.plot(x, y, title=f"{args.player}\n2023-24 Reg. Season", footnote="nba.stats.com", nba_id=nba_id, annos=annos)
 
 if __name__ == "__main__":
     main()

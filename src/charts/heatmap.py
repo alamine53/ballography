@@ -4,8 +4,12 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-from src.charts.geometry.court_2d import draw_halfcourt
-from ..utils import get_player_img
+try:
+    from src.charts.geometry.court_2d import draw_halfcourt
+    from src.utils import get_player_img
+except ImportError:
+    from ballography.src.charts.geometry.court_2d import draw_halfcourt
+    from ballography.src.utils import get_player_img
 
 
 class Heatmap:
