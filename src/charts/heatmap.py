@@ -4,13 +4,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-try:
-        from geometry.court_2d import draw_halfcourt
-        from customization.headshots import get_player_img
-        
-except ImportError:
-        from ballography.geometry.court_2d import draw_halfcourt
-        from ballography.customization.headshots import get_player_img
+from src.charts.geometry.court_2d import draw_halfcourt
+from ..utils import get_player_img
+
+
 class Heatmap:
         
         def __init__(self, cmap='plasma', thresh=0.25, alpha=0.75, headshot=True):

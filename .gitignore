@@ -1,5 +1,7 @@
 venv/
 __pycache__/
 *csv
-*zip
-*ipynb
+data/
+*env
+output/
+.DS_Store
