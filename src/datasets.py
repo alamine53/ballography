@@ -114,9 +114,18 @@ class Games(object):
         self.conn = db_conn
         self.table_name = "game_players"
     
-    def get_latest(self, last_n=10):
-        """ get most recent games of all types (pre-season, regular season, playoffs)"""
-        query = f"SELECT * FROM {self.table_name} ORDER BY date DESC LIMIT {last_n}"
+    def get_latest(self, last_n_days=10):
+        """ get most recent games of all types (pre-season, regular season, playoffs)
+        last_n_days: number of days to return
+        """
+        query = f"""
+        SELECT date, season, seasonType, nbaGameId, nbaTeamId, team as homeTeam, opponentId, opponent as awayTeam, teamPts as homePts, oppPts as awayPts, teamMargin as homeMargin
+        FROM {self.table_name}
+        WHERE date > DATE_SUB(CURDATE(), INTERVAL {last_n_days} DAY)
+        AND isHome = 1
+        GROUP BY nbaGameId
+        ORDER BY date ASC
+        """
         return pd.read_sql(query, self.conn)
         
 if __name__ == "__main__":
