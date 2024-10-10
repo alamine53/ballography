@@ -3,6 +3,7 @@ import pandas as pd
 import requests
 import zipfile
 import io
+import mysql.connector
 from datetime import datetime
 from src.db_conn import db_conn
 
@@ -65,22 +66,46 @@ class Shots(object):
     
 class Noah(object):
     
-    def __init__(self, season, from_db=True):
-        self.season = season
+    def __init__(self):
         self.conn = db_conn
         self.table_name = "dev_shots"
-    
-    def player_shots_by_period(self, player_name, start_date, end_date):
-        query = f"SELECT * FROM {self.table_name} WHERE PLAYER_NAME = '{player_name}' AND GAME_DATE >= '{start_date}' AND GAME_DATE <= '{end_date}'"
-        return pd.read_sql(query, self.conn)
-    
-    def team_shots_by_period(self, team_name, start_date, end_date):
-        query = f"SELECT * FROM {self.table_name} WHERE TEAM_NAME = '{team_name}' AND GAME_DATE >= '{start_date}' AND GAME_DATE <= '{end_date}'"
-        return pd.read_sql(query, self.conn)
-    
+        
     def get_player_list(self):
-        query = f"SELECT DISTINCT PLAYER_NAME FROM {self.table_name}"
+        query = f"SELECT DISTINCT name, noahId FROM {self.table_name}"
         return pd.read_sql(query, self.conn)
+    
+    def shots_by_player(self, name, start_date, end_date):
+        """ date is a string in the format YYYY-MM-DD"""
+        query = """
+        SELECT *
+        FROM dev_shots
+        WHERE name = %s
+        AND date BETWEEN %s AND %s
+        """
+        cursor = self.conn.cursor()
+        cursor.execute(query, (name, start_date, end_date))
+        colnames = [desc[0] for desc in cursor.description] 
+        return pd.DataFrame(cursor.fetchall(), columns=colnames)
+    
+    def team_shots_by_period(self, start_date, end_date):
+        """ returns the number of shots (except layups and free throws) and percentage over a given period 
+        for all registered players
+        Note: noahId is returned as a string (instead of scientific notation)
+        """
+        query = """
+        SELECT name, CAST(noahId AS CHAR) as noahId, MIN(date) as min_date, MAX(date) as max_date, sum(made) as makes, count(*) as shots,sum(made)/count(*) as pct
+        FROM dev_shots
+        WHERE date BETWEEN %s AND %s
+        AND layup = 0
+        AND tagName != 'Free Throw'
+        GROUP BY name, noahId
+        ORDER by pct desc
+        """
+        cursor = self.conn.cursor()
+        cursor.execute(query, (start_date, end_date))
+        colnames = [desc[0] for desc in cursor.description] 
+        return pd.DataFrame(cursor.fetchall(), columns=colnames)
+
 
 class Games(object):
     
@@ -88,10 +113,6 @@ class Games(object):
         self.season = season_to_year(season)
         self.conn = db_conn
         self.table_name = "game_players"
-
-    def __load_games(self):
-        self.games = pd.read_sql(f"SELECT * FROM {self.table_name} WHERE season={self.season}", self.conn)
-        return self.games
     
     def get_latest(self, last_n=10):
         """ get most recent games of all types (pre-season, regular season, playoffs)"""
